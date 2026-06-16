@@ -5,9 +5,9 @@ import io.micronaut.context.annotation.Replaces;
 import io.micronaut.runtime.ApplicationConfiguration;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.config.TokenConfiguration;
-import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider;
+import io.micronaut.security.token.claims.ClaimsAudienceProvider;
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator;
-import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator;
+import io.micronaut.security.token.claims.JtiGenerator;
 
 import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
@@ -17,10 +17,10 @@ import jakarta.inject.Singleton;
 public class InsuranceAgentJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
 
     public InsuranceAgentJWTClaimsSetGenerator(TokenConfiguration tokenConfiguration,
-                                               @Nullable JwtIdGenerator jwtIdGenerator,
+                                               @Nullable JtiGenerator jtiGenerator,
                                                @Nullable ClaimsAudienceProvider claimsAudienceProvider,
                                                @Nullable ApplicationConfiguration applicationConfiguration) {
-        super(tokenConfiguration, jwtIdGenerator, claimsAudienceProvider, applicationConfiguration);
+        super(tokenConfiguration, jtiGenerator, claimsAudienceProvider, applicationConfiguration);
     }
 
     @Override

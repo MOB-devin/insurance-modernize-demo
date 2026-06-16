@@ -14,7 +14,7 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
+import io.micronaut.security.token.render.AccessRefreshToken;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import reactor.core.publisher.Mono;

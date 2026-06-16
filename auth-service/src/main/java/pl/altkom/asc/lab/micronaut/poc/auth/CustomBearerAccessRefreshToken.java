@@ -1,6 +1,6 @@
 package pl.altkom.asc.lab.micronaut.poc.auth;
 
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken;
+import io.micronaut.security.token.render.BearerAccessRefreshToken;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

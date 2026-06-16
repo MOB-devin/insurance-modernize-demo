@@ -3,9 +3,9 @@ package pl.altkom.asc.lab.micronaut.poc.auth;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpHeaderValues;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
-import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken;
-import io.micronaut.security.token.jwt.render.BearerTokenRenderer;
+import io.micronaut.security.token.render.AccessRefreshToken;
+import io.micronaut.security.token.render.BearerAccessRefreshToken;
+import io.micronaut.security.token.render.BearerTokenRenderer;
 
 @Replaces(bean = BearerTokenRenderer.class)
 public class CustomBearerTokenRenderer extends BearerTokenRenderer {
