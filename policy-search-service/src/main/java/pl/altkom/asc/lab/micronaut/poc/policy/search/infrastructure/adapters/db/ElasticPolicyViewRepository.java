@@ -1,19 +1,17 @@
 package pl.altkom.asc.lab.micronaut.poc.policy.search.infrastructure.adapters.db;
 
-import io.reactivex.Maybe;
-import java.util.Arrays;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.inject.Singleton;
+
+import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.readmodel.PolicyView;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.readmodel.PolicyViewRepository;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.service.api.v1.queries.findpolicy.FindPolicyQuery;
@@ -26,39 +24,43 @@ public class ElasticPolicyViewRepository implements PolicyViewRepository {
     private static final String INDEX_NAME = "policy-views";
 
     private final ElasticClientAdapter elasticClientAdapter;
-    private final JsonConverter jsonConverter;
-    
+
     @Override
     public void save(PolicyView policy) {
-        IndexRequest indexRequest = new IndexRequest(INDEX_NAME,"policyview", policy.getNumber());
-        indexRequest.source(jsonConverter.stringifyObject(policy), XContentType.JSON);
-        elasticClientAdapter.index(indexRequest).blockingGet();
+        try {
+            IndexRequest<PolicyView> indexRequest = IndexRequest.of(b -> b
+                    .index(INDEX_NAME)
+                    .id(policy.getNumber())
+                    .document(policy)
+            );
+            elasticClientAdapter.index(indexRequest);
+        } catch (IOException e) {
+            log.error("Failed to index policy view", e);
+            throw new RuntimeException(e);
+        }
     }
-    
+
     @Override
-    public Maybe<List<PolicyView>> findAll(FindPolicyQuery query) {
-        SearchRequest searchRequest = new SearchRequest(INDEX_NAME);
+    public List<PolicyView> findAll(FindPolicyQuery query) {
+        try {
+            SearchRequest searchRequest = SearchRequest.of(s -> s
+                    .index(INDEX_NAME)
+                    .size(100)
+                    .query(q -> q
+                            .queryString(qs -> qs
+                                    .query(query.getQueryText())
+                                    .fields("number", "policyHolder")
+                            )
+                    )
+            );
 
-        QueryStringQueryBuilder queryStringQueryBuilder = QueryBuilders.queryStringQuery(query.getQueryText())
-                .field("number")
-                .field("policyHolder");
-
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(queryStringQueryBuilder).size(100);
-
-        searchRequest.source(searchSourceBuilder);
-
-        return elasticClientAdapter
-                .search(searchRequest)
-                .map(this::mapSearchResponse);
+            SearchResponse<PolicyView> response = elasticClientAdapter.search(searchRequest, PolicyView.class);
+            return response.hits().hits().stream()
+                    .map(Hit::source)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            log.error("Failed to search policies", e);
+            throw new RuntimeException(e);
+        }
     }
-    
-    private List<PolicyView> mapSearchResponse(SearchResponse searchResponse) {
-        return Arrays
-                .stream(searchResponse.getHits().getHits())
-                .map(hit -> jsonConverter.objectFromString(hit.getSourceAsString(), PolicyView.class))
-                .collect(Collectors.toList());
-    }
-    
-    
 }

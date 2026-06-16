@@ -1,42 +1,39 @@
 <template>
     <div class="form-container">
         <h2>Fill information about Policy Holder</h2>
-        <b-form @submit="createPolicy">
-            <b-form-group id="firstNameGroup"
-                          label="First name:"
-                          label-for="firstName">
-                <b-form-input id="firstName"
-                              type="text"
-                              v-model="policyHolder.firstName"
-                              required
-                              placeholder="Enter first name">
-                </b-form-input>
-            </b-form-group>
+        <form @submit="createPolicy">
+            <div class="mb-3">
+                <label for="firstName" class="form-label">First name:</label>
+                <input id="firstName"
+                       type="text"
+                       class="form-control"
+                       v-model="policyHolder.firstName"
+                       required
+                       placeholder="Enter first name">
+            </div>
 
-            <b-form-group id="lastNameGroup"
-                          label="Last name:"
-                          label-for="lastName">
-                <b-form-input id="lastName"
-                              type="text"
-                              v-model="policyHolder.lastName"
-                              required
-                              placeholder="Enter last name">
-                </b-form-input>
-            </b-form-group>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Last name:</label>
+                <input id="lastName"
+                       type="text"
+                       class="form-control"
+                       v-model="policyHolder.lastName"
+                       required
+                       placeholder="Enter last name">
+            </div>
 
-            <b-form-group id="taxIdGroup"
-                          label="Tax id:"
-                          label-for="taxId">
-                <b-form-input id="taxId"
-                              type="text"
-                              v-model="policyHolder.taxId"
-                              required
-                              placeholder="Enter tax id">
-                </b-form-input>
-            </b-form-group>
+            <div class="mb-3">
+                <label for="taxId" class="form-label">Tax id:</label>
+                <input id="taxId"
+                       type="text"
+                       class="form-control"
+                       v-model="policyHolder.taxId"
+                       required
+                       placeholder="Enter tax id">
+            </div>
 
-            <b-button type="submit" variant="primary">Confirm</b-button>
-        </b-form>
+            <button type="submit" class="btn btn-primary">Confirm</button>
+        </form>
 
     </div>
 </template>

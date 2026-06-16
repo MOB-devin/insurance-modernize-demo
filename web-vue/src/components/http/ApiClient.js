@@ -2,7 +2,7 @@ import axios from 'axios';
 import {TOKEN_KEY} from './Auth';
 
 export const HTTP = axios.create({
-    baseURL: (process.env.VUE_APP_BACKEND_URL ? process.env.VUE_APP_BACKEND_URL : "/api/")
+    baseURL: (import.meta.env.VUE_APP_BACKEND_URL ? import.meta.env.VUE_APP_BACKEND_URL : "/api/")
 });
 
 HTTP.interceptors.request.use(

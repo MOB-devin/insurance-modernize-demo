@@ -18,7 +18,7 @@ micronaut:
         signatures:
           secret:
             generator:
-              secret: pleaseChangeThisSecretForANewOne
+              secret: ${JWT_SECRET}
   router:
     static-resources:
       swagger:

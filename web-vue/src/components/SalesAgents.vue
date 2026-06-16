@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import SalesBar from "./SalesBar.js";
+import SalesBar from "./SalesBar.vue";
 
 export default {
     name: 'SalesAgents',

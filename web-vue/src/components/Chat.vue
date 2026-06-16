@@ -1,12 +1,12 @@
 <template>
     <div>
-        <b-form-input id="message"
-                      type="text"
-                      v-model="message"
-                      required
-                      @keyup.native.enter="send"
-                      placeholder="Type your message">
-        </b-form-input>
+        <input id="message"
+               type="text"
+               class="form-control"
+               v-model="message"
+               required
+               @keyup.enter="send"
+               placeholder="Type your message">
 
         <div class="messages-container" v-html="chat">
         </div>

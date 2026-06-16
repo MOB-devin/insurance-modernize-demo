@@ -22,10 +22,6 @@ endpoints:
     enabled: true
     sensitive: false
 ---
-hystrix:
-  stream:
-    enabled: true
----
 tracing:
   zipkin:
     enabled: true

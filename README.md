@@ -6,7 +6,7 @@ This is an example of a very simplified insurance sales system made in a microse
 
 Comprehensive guide describing exactly the architecture, applied design patterns and technologies can be found on our blog in article **[Building Microservices with Micronaut](https://altkomsoftware.pl/en/blog/microservices-micronaut/)**.
 
-**We have recently upgraded to Java 14 (you must have JDK14 in order to build and run the project).**
+**This project requires Java 21 (JDK 21) and Node.js 20+ to build and run.**
 
 **We encourage you to read, because in this README there is only a substitute for all information.**
 
@@ -54,14 +54,14 @@ Based on login and password users get authenticated and JWT token with their pri
 Then ElasticSearch aggregation framework is used to calculate sales stats like: total sales and number of policies per product per time period,
 sales per agent in given time period and sales timeline. Sales stats are nicely visualized using ChartJS.
 
-* **web-vue** - SPA application built with Vue.js and Bootstrap for Vue.
+* **web-vue** - SPA application built with Vue 3, Vite, and Bootstrap 5.
 
 Each business microservice has also **-api module** (payment-service-api, policy-service-api etc.), where we defined commands, events, queries and operations. 
 
 In the picture you can also see the component **internal-command-bus**. This component is used internally by microservices if we want to use a CQRS pattern inside (simple example in OfferController in policy-service).
 
 ## Building
-This step requires **Java 14 (JDK), Maven** and **Yarn**.
+This step requires **Java 21 (JDK), Maven** and **Node.js 20+**.
 
 For demo purposes build process is automated by a shell script.
 For Unix-based systems:
@@ -97,7 +97,14 @@ For Windows users, append below line ```C:\Windows\System32\drivers\etc\hosts```
 127.0.0.1 kafkaserver
 ```
 
-For frontend app running, you must add file ```.env.local``` based on ```.env-example``` .
+For frontend app running, you must add file ```.env.local``` based on ```.env-example``` in the ```web-vue``` directory.
+
+To run the frontend dev server:
+```
+cd web-vue
+npm install
+npm run dev
+```
 <p align="center">
     <img alt="Env" src="https://raw.githubusercontent.com/asc-lab/micronaut-microservices-poc/master/readme-images/env.png" />
 </p>

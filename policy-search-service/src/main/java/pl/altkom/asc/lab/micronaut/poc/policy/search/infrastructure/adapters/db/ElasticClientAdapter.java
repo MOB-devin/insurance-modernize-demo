@@ -1,69 +1,49 @@
 package pl.altkom.asc.lab.micronaut.poc.policy.search.infrastructure.adapters.db;
 
-import io.reactivex.Maybe;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
+import java.io.IOException;
 
 @Singleton
 @Slf4j
 public class ElasticClientAdapter {
 
-    private final RestHighLevelClient restHighLevelClient;
+    private final ElasticsearchClient client;
     private final ElasticSearchSettings elasticSearchSettings;
 
     public ElasticClientAdapter(ElasticSearchSettings elasticSearchSettings) {
         this.elasticSearchSettings = elasticSearchSettings;
-        this.restHighLevelClient = buildClient();
+        this.client = buildClient();
     }
 
-    Maybe<IndexResponse> index(IndexRequest indexRequest) {
-        return Maybe.create(sink -> {
-            restHighLevelClient.indexAsync(indexRequest, new ActionListener<IndexResponse>() {
-                @Override
-                public void onResponse(IndexResponse indexResponse) {
-                    sink.onSuccess(indexResponse);
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    sink.onError(e);
-                }
-            });
-        });
+    <T> IndexResponse index(IndexRequest<T> indexRequest) throws IOException {
+        return client.index(indexRequest);
     }
 
-    public Maybe<SearchResponse> search(SearchRequest searchRequest) {
-        return Maybe.create(sink ->
-                restHighLevelClient.searchAsync(searchRequest, new ActionListener<SearchResponse>() {
-                    @Override
-                    public void onResponse(SearchResponse searchResponse) {
-                        sink.onSuccess(searchResponse);
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        sink.onError(e);
-                    }
-                }));
+    public <T> SearchResponse<T> search(SearchRequest searchRequest, Class<T> clazz) throws IOException {
+        return client.search(searchRequest, clazz);
     }
 
-    private RestHighLevelClient buildClient() {
-        return new RestHighLevelClient(
-                RestClient.builder(new HttpHost(elasticSearchSettings.getHost(), elasticSearchSettings.getPort()))
-                        .setRequestConfigCallback(config -> config
-                                .setConnectTimeout(elasticSearchSettings.getConnectionTimeout())
-                                .setConnectionRequestTimeout(elasticSearchSettings.getConnectionRequestTimeout())
-                                .setSocketTimeout(elasticSearchSettings.getSocketTimeout())
-                        )
-                        .setMaxRetryTimeoutMillis(elasticSearchSettings.getMaxRetryTimeout()));
+    private ElasticsearchClient buildClient() {
+        RestClient restClient = RestClient.builder(
+                new HttpHost(elasticSearchSettings.getHost(), elasticSearchSettings.getPort())
+        ).setRequestConfigCallback(config -> config
+                .setConnectTimeout(elasticSearchSettings.getConnectionTimeout())
+                .setConnectionRequestTimeout(elasticSearchSettings.getConnectionRequestTimeout())
+                .setSocketTimeout(elasticSearchSettings.getSocketTimeout())
+        ).build();
+
+        RestClientTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
+        return new ElasticsearchClient(transport);
     }
 }

@@ -1,6 +1,6 @@
 package pl.altkom.asc.lab.micronaut.poc.dashboard.domain;
 
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import co.elastic.clients.elasticsearch._types.aggregations.CalendarInterval;
 
 public enum TimeAggregationUnit {
     DAY,
@@ -8,14 +8,12 @@ public enum TimeAggregationUnit {
     MONTH,
     YEAR;
 
-    public DateHistogramInterval toDateHistogramInterval(){
+    public CalendarInterval toCalendarInterval() {
         return switch (this) {
-            case DAY-> DateHistogramInterval.DAY;
-            case WEEK-> DateHistogramInterval.WEEK;
-            case MONTH-> DateHistogramInterval.MONTH;
-            case YEAR-> DateHistogramInterval.YEAR;
-            default->
-                throw new IllegalArgumentException("Invalid unit value");
+            case DAY -> CalendarInterval.Day;
+            case WEEK -> CalendarInterval.Week;
+            case MONTH -> CalendarInterval.Month;
+            case YEAR -> CalendarInterval.Year;
         };
     }
 }

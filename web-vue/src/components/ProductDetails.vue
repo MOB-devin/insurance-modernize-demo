@@ -15,42 +15,44 @@
                     <div class="col-sm-12">
 
                         <form @submit.prevent="submitForm">
-                            <div class="form-group row">
+                            <div class="form-group row mb-3">
                                 <label class="col-sm-3 col-form-label">Policy from </label>
                                 <div class="col-sm-9">
-                                    <b-form-input v-model="policyFrom"
-                                                  type="date"
-                                                  id="policyFrom"
-                                                  name="policyFrom"
-                                                  :disabled="'VIEW' === mode"
-                                                  required
-                                                  placeholder="Policy from"></b-form-input>
+                                    <input v-model="policyFrom"
+                                           type="date"
+                                           class="form-control"
+                                           id="policyFrom"
+                                           name="policyFrom"
+                                           :disabled="'VIEW' === mode"
+                                           required
+                                           placeholder="Policy from">
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="form-group row mb-3">
                                 <label class="col-sm-3 col-form-label">Policy to </label>
                                 <div class="col-sm-9">
-                                    <b-form-input v-model="policyTo"
-                                                  type="date"
-                                                  id="policyTo"
-                                                  name="policyTo"
-                                                  required
-                                                  :disabled="'VIEW' === mode"
-                                                  placeholder="Policy to"></b-form-input>
+                                    <input v-model="policyTo"
+                                           type="date"
+                                           class="form-control"
+                                           id="policyTo"
+                                           name="policyTo"
+                                           required
+                                           :disabled="'VIEW' === mode"
+                                           placeholder="Policy to">
                                 </div>
                             </div>
 
-                            <div v-for="a in answers" class="form-group row" :key="a.id">
+                            <div v-for="a in answers" class="form-group row mb-3" :key="a.question.code">
                                 <label class="col-sm-3 col-form-label">{{a.question.text}} </label>
 
                                 <div class="col-sm-9" v-if="a.question.type==='numeric'">
-                                    <b-form-input v-model="a.answer"
-                                                  class="form-control"
-                                                  type="number"
-                                                  :disabled="'VIEW' === mode"
-                                                  min="0"
-                                                  required></b-form-input>
+                                    <input v-model="a.answer"
+                                           class="form-control"
+                                           type="number"
+                                           :disabled="'VIEW' === mode"
+                                           min="0"
+                                           required>
                                 </div>
 
                                 <div class="col-sm-9" v-if="a.question.type==='choice'">
@@ -73,7 +75,7 @@
                             <div class="form-group row" v-if="'VIEW' === mode">
                                 <label class="col-sm-3 col-form-label">Price</label>
                                 <div class="col-sm-9">
-                                    <span class="float-left">
+                                    <span class="float-start">
                                         <strong>{{price.amountToPay}} EUR</strong>
                                     </span>
                                 </div>
@@ -83,26 +85,26 @@
                                 <div class="col-sm-12 margin-top-10">
                                     <div class="d-flex flex-row-reverse" v-if="'EDIT' === mode">
                                         <div class="p-2">
-                                            <b-button type="submit" variant="primary">Calculate price</b-button>
+                                            <button type="submit" class="btn btn-primary">Calculate price</button>
                                         </div>
                                         <div class="p-2">
                                             <router-link :to="{name: 'products'}">
-                                                <b-button variant="secondary">Back</b-button>
+                                                <button type="button" class="btn btn-secondary">Back</button>
                                             </router-link>
                                         </div>
                                     </div>
 
                                     <div class="d-flex flex-row-reverse" v-if="'VIEW' === mode">
                                         <div class="p-2">
-                                            <button type="submit" class="btn btn-primary" v-on:click.stop.prevent="buyOffer">Buy</button>
+                                            <button type="submit" class="btn btn-primary" @click.stop.prevent="buyOffer">Buy</button>
                                         </div>
                                         <div class="p-2">
-                                            <a class="btn btn-secondary" href="#" v-on:click.stop.prevent="backToEdit" role="button">Change
+                                            <a class="btn btn-secondary" href="#" @click.stop.prevent="backToEdit" role="button">Change
                                                 parameters</a>
                                         </div>
                                         <div class="p-2">
                                             <router-link :to="{name: 'products'}">
-                                                <b-button variant="secondary">Back</b-button>
+                                                <button type="button" class="btn btn-secondary">Back</button>
                                             </router-link>
                                         </div>
                                     </div>
@@ -187,7 +189,7 @@
                 const isValid = this.validate();
                 if (isValid)
                     this.calculatePrice();
-                e.preventDefault();
+                if (e) e.preventDefault();
             },
             validate() {
                 this.errors = [];
@@ -217,7 +219,7 @@
     }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
     .margin-top-10 {
         margin-top: 10px;
     }

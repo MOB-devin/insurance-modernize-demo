@@ -2,33 +2,27 @@
   <div>
     <div class="container-fluid">
       <div class="row">
-        <div class="col text-left">
-          <div>
-            <b-dropdown id="dropdown-1" v-model="filterProductsSelection" :text="filterProductsSelectionText" class="m-md-2">
-              <b-dropdown-item v-for="option in productsFilterOptions" 
-              v-bind:value="option.value" 
-              :key="option.value"
-              v-on:click="productFilterChange(option.value)">
-              {{option.text}}
-              </b-dropdown-item>
-            </b-dropdown>
+        <div class="col text-start">
+          <div class="dropdown m-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-1" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ filterProductsSelectionText }}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdown-1">
+              <li v-for="option in productsFilterOptions" :key="option.value">
+                <a class="dropdown-item" href="#" @click.prevent="productFilterChange(option.value)">{{ option.text }}</a>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="col">
-          <div class="float-right">
-          <b-input-group>
-            <b-input-group-prepend>
-              <b-button variant="outline-info" v-on:click="changeDatesFilter('LAST_12_MONTHS')">Last 12 Months</b-button>
-            </b-input-group-prepend>
-            <b-input-group-append>
-              <b-button variant="outline-info" v-on:click="changeDatesFilter('THIS_YEAR')">This year</b-button>
-              <b-button variant="outline-info" v-on:click="changeDatesFilter('THIS_MONTH')">This month</b-button>
-            </b-input-group-append>
-          </b-input-group>
+          <div class="float-end">
+            <div class="btn-group">
+              <button class="btn btn-outline-info" @click="changeDatesFilter('LAST_12_MONTHS')">Last 12 Months</button>
+              <button class="btn btn-outline-info" @click="changeDatesFilter('THIS_YEAR')">This year</button>
+              <button class="btn btn-outline-info" @click="changeDatesFilter('THIS_MONTH')">This month</button>
+            </div>
           </div>
         </div>
-        
-
       </div>
     </div>
 
@@ -77,7 +71,6 @@ import SalesAgents from "./SalesAgents";
 import SalesTrendsLines from "./SalesTrendsLines";
 import SalesDistribution from "./SalesDistribution";
 import TotalSalesCard from "./TotalSalesCard";
-import {_} from 'vue-underscore';
 import moment from 'moment';
 
 export default {
@@ -167,7 +160,7 @@ export default {
     },
     productFilterChange(option) {
       this.filterProductsSelection = option;
-      this.filterProductsSelectionText = _.find(this.productsFilterOptions,i=>i.value===option).text;
+      this.filterProductsSelectionText = this.productsFilterOptions.find(i => i.value === option).text;
       this.fetchTotalSales();
       this.fetchAgentsSales();
       this.fetchSalesTrends();
@@ -191,7 +184,7 @@ export default {
     },
     setupRequest(request) {
       request.saleDateFrom = moment(this.filteredPeriod.startDate).format('YYYY-MM-DD');
-      request.saleDateTo = moment(this.filteredPeriod.endDate).format('YYYY-MM-DD'); 
+      request.saleDateTo = moment(this.filteredPeriod.endDate).format('YYYY-MM-DD');
       request.aggregationUnitCode = this.filteredPeriod.option === 'THIS_MONTH' ? 'WEEK' : 'MONTH';
       request.productCode = this.filterProductsSelection==='ALL' ? null : this.filterProductsSelection;
       return request;

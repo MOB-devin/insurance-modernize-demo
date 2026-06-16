@@ -1,70 +1,65 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from './views/HomeView.vue'
 
-Vue.use(Router);
+const routes = [
+    {
+        path: '/',
+        name: 'home',
+        component: Home
+    },
+    {
+        path: '/chat',
+        name: 'chat',
+        component: () => import('./views/ChatView.vue')
+    },
+    {
+        path: '/chatbot',
+        name: 'chatbot',
+        component: () => import('./views/ChatbotView.vue')
+    },
+    {
+        path: '/account',
+        name: 'account',
+        component: () => import('./views/AccountView.vue')
+    },
+    {
+        path: '/products',
+        name: 'products',
+        component: () => import('./views/ProductsView.vue')
+    },
+    {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: () => import('./views/DashboardView.vue')
+    },
+    {
+        path: '/products/:productCode',
+        name: 'product',
+        props: true,
+        component: () => import('./views/ProductDetailsView.vue')
+    },
+    {
+        path: '/policy/fromOffer/:offerNumber',
+        name: 'createPolicy',
+        props: true,
+        component: () => import('./views/PolicyCreateView.vue')
+    },
+    {
+        path: '/policies',
+        name: 'policies',
+        component: () => import('./views/PoliciesView.vue')
+    },
+    {
+        path: '/policies/:policyNumber',
+        name: 'policyDetails',
+        props: true,
+        component: () => import('./views/PolicyDetailsView.vue')
+    }
+]
 
-function loadView(view) {
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    return () => import(/* webpackChunkName: "view-[request]" */ `./views/${view}View.vue`)
-}
-
-export default new Router({
-    routes: [
-        {
-            path: '/',
-            name: 'home',
-            component: Home
-        },
-        {
-            path: '/chat',
-            name: 'chat',
-            component: loadView('Chat')
-        },
-        {
-            path: '/chatbot',
-            name: 'chatbot',
-            component: loadView('Chatbot')
-        },
-        {
-            path: '/account',
-            name: 'account',
-            component: loadView('Account')
-        },
-        {
-            path: '/products',
-            name: 'products',
-            component: loadView('Products')
-        },
-        {
-            path: '/dashboard',
-            name: 'dashboard',
-            component: loadView('Dashboard')
-        },
-        {
-            path: '/products/:productCode',
-            name: 'product',
-            props: true,
-            component: loadView('ProductDetails')
-        },
-        {
-            path: '/policy/fromOffer/:offerNumber',
-            name: 'createPolicy',
-            props: true,
-            component: loadView('PolicyCreate')
-        },
-        {
-            path: '/policies',
-            name: 'policies',
-            component: loadView('Policies')
-        },
-        {
-            path: '/policies/:policyNumber',
-            name: 'policyDetails',
-            props: true,
-            component: loadView('PolicyDetails')
-        }
-    ]
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes
 })
+
+export default router
