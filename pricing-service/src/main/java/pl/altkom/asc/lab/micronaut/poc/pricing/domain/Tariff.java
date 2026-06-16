@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @Table(name = "tariff")
 @NoArgsConstructor

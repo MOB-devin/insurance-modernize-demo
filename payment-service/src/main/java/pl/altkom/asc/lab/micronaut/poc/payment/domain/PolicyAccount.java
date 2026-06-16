@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Setter;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @Table(name = "policy_account")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

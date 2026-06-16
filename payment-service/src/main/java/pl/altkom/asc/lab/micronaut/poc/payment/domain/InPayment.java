@@ -8,6 +8,9 @@ import jakarta.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @DiscriminatorValue(value = "inpayment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

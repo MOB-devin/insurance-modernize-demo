@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @Inheritance
 @Table(name = "accounting_entry")

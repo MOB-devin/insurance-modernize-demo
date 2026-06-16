@@ -8,6 +8,9 @@ import jakarta.persistence.Entity;
 
 import lombok.NoArgsConstructor;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @DiscriminatorValue("perc_markup")
 @NoArgsConstructor
