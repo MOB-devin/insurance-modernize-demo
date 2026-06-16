@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import pl.altkom.asc.lab.micronaut.poc.product.service.domain.Product;
 import pl.altkom.asc.lab.micronaut.poc.product.service.infrastructure.adapters.db.ProductsRepository;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.List;
 
 @Singleton

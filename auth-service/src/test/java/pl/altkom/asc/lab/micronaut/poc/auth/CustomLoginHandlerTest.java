@@ -2,7 +2,7 @@ package pl.altkom.asc.lab.micronaut.poc.auth;
 
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpMethod;

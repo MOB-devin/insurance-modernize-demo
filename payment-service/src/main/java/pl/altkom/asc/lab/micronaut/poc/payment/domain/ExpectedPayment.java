@@ -3,8 +3,8 @@ package pl.altkom.asc.lab.micronaut.poc.payment.domain;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

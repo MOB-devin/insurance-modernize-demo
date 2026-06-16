@@ -4,7 +4,7 @@ import org.reactivestreams.Publisher;
 
 import java.util.Optional;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.security.authentication.AuthenticationFailed;

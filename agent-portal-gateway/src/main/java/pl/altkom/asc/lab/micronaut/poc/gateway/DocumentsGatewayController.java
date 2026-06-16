@@ -7,7 +7,7 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.security.annotation.Secured;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.DocumentsGatewayClient;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/api/documents")

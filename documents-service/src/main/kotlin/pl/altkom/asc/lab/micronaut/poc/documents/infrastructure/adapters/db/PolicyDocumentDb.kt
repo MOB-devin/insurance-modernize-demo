@@ -3,9 +3,9 @@ package pl.altkom.asc.lab.micronaut.poc.documents.infrastructure.adapters.db
 import pl.altkom.asc.lab.micronaut.poc.documents.domain.PolicyDocument
 import pl.altkom.asc.lab.micronaut.poc.documents.domain.PolicyDocumentRepository
 import pl.altkom.asc.lab.micronaut.poc.documents.infrastructure.annotations.RequiresJdbc
-import javax.inject.Singleton
-import javax.persistence.EntityManager
-import javax.transaction.Transactional
+import jakarta.inject.Singleton
+import jakarta.persistence.EntityManager
+import jakarta.transaction.Transactional
 import kotlin.streams.toList
 
 @Singleton

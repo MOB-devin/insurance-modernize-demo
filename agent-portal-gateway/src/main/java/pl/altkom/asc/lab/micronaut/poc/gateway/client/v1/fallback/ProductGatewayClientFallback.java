@@ -6,7 +6,7 @@ import io.reactivex.Single;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.ProductGatewayClient;
 import pl.altkom.asc.lab.micronaut.poc.product.service.api.v1.ProductDto;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.Collections;
 import java.util.List;
 

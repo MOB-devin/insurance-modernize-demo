@@ -5,8 +5,8 @@ import pl.altkom.asc.lab.micronaut.poc.payment.domain.BankStatementFile.BankStat
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.inject.Singleton;
-import javax.transaction.Transactional;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 

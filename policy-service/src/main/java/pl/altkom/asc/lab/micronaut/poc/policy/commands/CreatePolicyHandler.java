@@ -16,8 +16,8 @@ import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.events.dto.PolicyDt
 
 import java.time.LocalDate;
 
-import javax.inject.Singleton;
-import javax.transaction.Transactional;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 

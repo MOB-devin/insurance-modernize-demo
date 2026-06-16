@@ -9,8 +9,8 @@ import io.micronaut.security.token.jwt.generator.claims.ClaimsAudienceProvider;
 import io.micronaut.security.token.jwt.generator.claims.JWTClaimsSetGenerator;
 import io.micronaut.security.token.jwt.generator.claims.JwtIdGenerator;
 
-import javax.annotation.Nullable;
-import javax.inject.Singleton;
+import jakarta.annotation.Nullable;
+import jakarta.inject.Singleton;
 
 @Singleton
 @Replaces(bean = JWTClaimsSetGenerator.class)

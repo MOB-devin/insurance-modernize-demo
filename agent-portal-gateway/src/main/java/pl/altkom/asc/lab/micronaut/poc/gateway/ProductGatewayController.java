@@ -9,7 +9,7 @@ import io.reactivex.Single;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.ProductGatewayClient;
 import pl.altkom.asc.lab.micronaut.poc.product.service.api.v1.ProductDto;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.List;
 
 @Secured(SecurityRule.IS_AUTHENTICATED)

@@ -3,8 +3,8 @@ package pl.altkom.asc.lab.micronaut.poc.payment.init;
 import pl.altkom.asc.lab.micronaut.poc.payment.domain.PolicyAccount;
 import pl.altkom.asc.lab.micronaut.poc.payment.domain.PolicyAccountRepository;
 
-import javax.inject.Singleton;
-import javax.transaction.Transactional;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.runtime.server.event.ServerStartupEvent;

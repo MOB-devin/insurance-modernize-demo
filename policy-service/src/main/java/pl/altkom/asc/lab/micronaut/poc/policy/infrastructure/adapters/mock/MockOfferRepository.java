@@ -6,8 +6,8 @@ import pl.altkom.asc.lab.micronaut.poc.policy.domain.OfferRepository;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Singleton;
-import javax.transaction.Transactional;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;

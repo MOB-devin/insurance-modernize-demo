@@ -8,7 +8,7 @@ import io.micronaut.http.client.HttpClient
 import pl.altkom.asc.lab.micronaut.poc.documents.domain.ReportGenerator
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.events.PolicyRegisteredEvent
 import java.net.URL
-import javax.inject.Singleton
+import jakarta.inject.Singleton
 
 @Singleton
 class JsReportGenerator : ReportGenerator {

@@ -9,7 +9,7 @@ import pl.altkom.asc.lab.micronaut.poc.policy.search.readmodel.PolicyView;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.readmodel.PolicyViewRepository;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.service.api.v1.queries.findpolicy.FindPolicyQuery;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

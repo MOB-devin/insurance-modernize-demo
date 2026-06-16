@@ -10,7 +10,7 @@ import pl.altkom.asc.lab.micronaut.poc.pricing.service.api.v1.commands.calculate
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import lombok.RequiredArgsConstructor;

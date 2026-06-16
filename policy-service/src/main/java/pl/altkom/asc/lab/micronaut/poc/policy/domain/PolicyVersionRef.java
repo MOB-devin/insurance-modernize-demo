@@ -2,7 +2,7 @@ package pl.altkom.asc.lab.micronaut.poc.policy.domain;
 
 import lombok.*;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
