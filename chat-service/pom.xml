@@ -63,7 +63,7 @@
 
         <!-- DISCOVERY CLIENT -->
         <dependency>
-            <groupId>io.micronaut</groupId>
+            <groupId>io.micronaut.discovery</groupId>
             <artifactId>micronaut-discovery-client</artifactId>
             <scope>compile</scope>
         </dependency>

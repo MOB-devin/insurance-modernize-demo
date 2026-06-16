@@ -73,7 +73,7 @@
         </dependency>
 
         <dependency>
-            <groupId>io.micronaut</groupId>
+            <groupId>io.micronaut.discovery</groupId>
             <artifactId>micronaut-discovery-client</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -98,24 +98,14 @@
 
         <!-- TRACING WITH ZIPKIN -->
         <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-tracing</artifactId>
+            <groupId>io.micronaut.tracing</groupId>
+            <artifactId>micronaut-tracing-brave-http</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.zipkin.brave</groupId>
-            <artifactId>brave-instrumentation-http</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.zipkin.reporter2</groupId>
             <artifactId>zipkin-reporter</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.opentracing.brave</groupId>
-            <artifactId>brave-opentracing</artifactId>
-            <scope>compile</scope>
         </dependency>
         <!-- TRACING WITH ZIPKIN -->
 
