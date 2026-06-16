@@ -31,9 +31,9 @@ public class SalesTrendsQueryAdapter extends QueryAdapter<SalesTrendsQuery, Sale
             filters.add(Query.of(q -> q.term(t -> t.field("productCode.keyword").value(query.getFilterByProductCode()))));
         }
         if (query.getFilterBySalesDate() != null) {
-            filters.add(Query.of(q -> q.range(r -> r.field("from")
+            filters.add(Query.of(q -> q.range(r -> r.untyped(u -> u.field("from")
                     .gte(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getFrom().toString()))
-                    .lt(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getTo().toString())))));
+                    .lt(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getTo().toString()))))));
         }
 
         BoolQuery boolQuery = BoolQuery.of(b -> b.must(filters));
@@ -65,7 +65,7 @@ public class SalesTrendsQueryAdapter extends QueryAdapter<SalesTrendsQuery, Sale
 
         for (DateHistogramBucket b : buckets) {
             SumAggregate sum = b.aggregations().get("total_premium").sum();
-            LocalDate key = Instant.ofEpochMilli(Long.parseLong(b.key())).atZone(ZoneOffset.UTC).toLocalDate();
+            LocalDate key = Instant.ofEpochMilli(b.key()).atZone(ZoneOffset.UTC).toLocalDate();
             result.periodSale(
                     new SalesTrendsQuery.PeriodSales(
                             key,
