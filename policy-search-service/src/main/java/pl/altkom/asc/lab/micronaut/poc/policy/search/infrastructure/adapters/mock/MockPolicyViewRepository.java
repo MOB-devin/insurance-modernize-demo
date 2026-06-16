@@ -3,7 +3,6 @@ package pl.altkom.asc.lab.micronaut.poc.policy.search.infrastructure.adapters.mo
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
-import reactor.core.publisher.Mono;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.infrastructure.adapters.db.ElasticPolicyViewRepository;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.readmodel.PolicyView;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.readmodel.PolicyViewRepository;
@@ -53,8 +52,8 @@ public class MockPolicyViewRepository implements PolicyViewRepository {
     }
 
     @Override
-    public Mono<List<PolicyView>> findAll(FindPolicyQuery query) {
-        return Mono.just(new ArrayList<>(policyMap.values()));
+    public List<PolicyView> findAll(FindPolicyQuery query) {
+        return new ArrayList<>(policyMap.values());
     }
 
     @Override
