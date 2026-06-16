@@ -1,8 +1,8 @@
 package pl.altkom.asc.lab.micronaut.poc.dashboard.domain;
 
-import io.micronaut.kafka.annotation.KafkaListener;
-import io.micronaut.kafka.annotation.OffsetReset;
-import io.micronaut.kafka.annotation.Topic;
+import io.micronaut.configuration.kafka.annotation.KafkaListener;
+import io.micronaut.configuration.kafka.annotation.OffsetReset;
+import io.micronaut.configuration.kafka.annotation.Topic;
 import lombok.RequiredArgsConstructor;
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.events.PolicyRegisteredEvent;
 
