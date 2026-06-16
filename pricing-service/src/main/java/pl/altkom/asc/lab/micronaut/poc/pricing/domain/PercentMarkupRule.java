@@ -3,11 +3,14 @@ package pl.altkom.asc.lab.micronaut.poc.pricing.domain;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 import lombok.NoArgsConstructor;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @DiscriminatorValue("perc_markup")
 @NoArgsConstructor

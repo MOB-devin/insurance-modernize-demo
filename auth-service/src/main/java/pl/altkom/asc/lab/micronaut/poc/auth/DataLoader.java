@@ -3,7 +3,7 @@ package pl.altkom.asc.lab.micronaut.poc.auth;
 import java.util.Arrays;
 import java.util.UUID;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.runtime.server.event.ServerStartupEvent;

@@ -2,22 +2,22 @@ package pl.altkom.asc.lab.micronaut.poc.auth;
 
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.authentication.UsernamePasswordCredentials;
-import io.micronaut.security.token.jwt.render.AccessRefreshToken;
+import io.micronaut.security.token.render.AccessRefreshToken;
 import io.micronaut.security.token.jwt.validator.JwtTokenValidator;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Mono;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +29,7 @@ public class CustomClaimsTest {
 
     @Inject
     @Client("/")
-    private RxHttpClient httpClient;
+    private HttpClient httpClient;
 
     @Test
     public void testCustomClaimsArePresentInJwt() {
@@ -48,9 +48,10 @@ public class CustomClaimsTest {
         //when:
         String accessToken = rsp.body().getAccessToken();
         JwtTokenValidator tokenValidator = server.getApplicationContext().getBean(JwtTokenValidator.class);
-        Authentication authentication = Flowable
-                .fromPublisher(tokenValidator.validateToken(accessToken,request))
-                .blockingFirst();
+        @SuppressWarnings("unchecked")
+        Authentication authentication = (Authentication) Mono
+                .from(tokenValidator.validateToken(accessToken, request))
+                .block();
 
         //then:
         assertThat(authentication.getAttributes()).isNotNull();

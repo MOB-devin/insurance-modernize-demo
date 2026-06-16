@@ -3,7 +3,7 @@ package pl.altkom.asc.lab.micronaut.poc.policy.search.infrastructure.adapters.bu
 import pl.altkom.asc.lab.micronaut.poc.command.bus.MicronautCommandBus;
 import pl.altkom.asc.lab.micronaut.poc.command.bus.Registry;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class PolicySearchCommandBus extends MicronautCommandBus {

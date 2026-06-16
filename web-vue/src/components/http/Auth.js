@@ -1,4 +1,6 @@
-const API_URL = (process.env.VUE_APP_AUTH_URL ? process.env.VUE_APP_AUTH_URL : "/");
+import axios from 'axios';
+
+const API_URL = (import.meta.env.VUE_APP_AUTH_URL ? import.meta.env.VUE_APP_AUTH_URL : "/");
 const LOGIN_URL = API_URL + 'login';
 
 export const TOKEN_KEY = "jwt";
@@ -6,13 +8,13 @@ export const DETAILS_KEY = "auth-details";
 
 export default {
 
-    login(context, credentials) {
+    login(credentials) {
         this.clearToken();
-        return context.$http.post(LOGIN_URL, credentials)
+        return axios.post(LOGIN_URL, credentials)
             .then(
                 (response) => {
-                    localStorage.setItem(TOKEN_KEY, response.body.access_token);
-                    localStorage.setItem(DETAILS_KEY, JSON.stringify(response.body));
+                    localStorage.setItem(TOKEN_KEY, response.data.access_token);
+                    localStorage.setItem(DETAILS_KEY, JSON.stringify(response.data));
                 },
                 (error) => {
                     console.info(error);

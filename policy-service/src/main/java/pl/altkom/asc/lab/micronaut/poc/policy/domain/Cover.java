@@ -6,8 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

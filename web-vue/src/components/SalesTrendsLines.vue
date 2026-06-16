@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import SalesLines from "./SalesLines.js"
+import SalesLines from "./SalesLines.vue"
 
 export default {
     name: 'SalesTrendsLines',

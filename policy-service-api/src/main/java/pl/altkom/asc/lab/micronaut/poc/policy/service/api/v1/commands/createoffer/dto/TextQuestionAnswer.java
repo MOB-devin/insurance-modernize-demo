@@ -2,10 +2,12 @@ package pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.commands.createoff
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import io.micronaut.core.annotation.Introspected;
 
 @Introspected
+@JsonTypeName("text")
 public class TextQuestionAnswer extends QuestionAnswer<String> {
     @JsonCreator
     public TextQuestionAnswer(@JsonProperty("questionCode") String questionCode, @JsonProperty("answer") String answer) {

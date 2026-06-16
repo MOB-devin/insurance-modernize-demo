@@ -5,7 +5,7 @@ import io.micronaut.http.annotation.Get;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.PaymentGatewayClient;
 import pl.altkom.asc.lab.micronaut.poc.payment.service.api.v1.PolicyAccountDto;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.Collection;
 
 @Controller("/api/payments")

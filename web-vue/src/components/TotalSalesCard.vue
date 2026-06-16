@@ -4,9 +4,9 @@
             <div class="card-body p-3 d-flex align-items-center">
             <i v-bind:class="iconClass"></i>
             <div>
-                <div class="text-value-sm text-primary">{{amount}}</div>
-                <div class="text-muted text-uppercase font-weight-bold small">{{title}}</div>
-                <div v-if="policiesCount" class="text-muted text-uppercase font-weight-bold small">{{policiesCount}} pcs.</div>
+                <div class="text-primary fw-semibold">{{amount}}</div>
+                <div class="text-muted text-uppercase fw-bold small">{{title}}</div>
+                <div v-if="policiesCount" class="text-muted text-uppercase fw-bold small">{{policiesCount}} pcs.</div>
             </div>
             </div>
         </div>
@@ -19,7 +19,7 @@ export default {
     props: ['title', 'icon', 'amount', 'policiesCount'],
     computed: {
         iconClass() {
-            return "fa fa-" + this.icon + " bg-primary p-3 font-2xl mr-3";
+            return "fas fa-" + this.icon + " bg-primary p-3 fs-2 me-3 text-white rounded";
         }
     }
 }

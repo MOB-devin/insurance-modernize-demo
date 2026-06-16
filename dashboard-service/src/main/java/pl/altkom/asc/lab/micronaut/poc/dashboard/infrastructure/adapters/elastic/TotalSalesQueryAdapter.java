@@ -1,23 +1,22 @@
 package pl.altkom.asc.lab.micronaut.poc.dashboard.infrastructure.adapters.elastic;
 
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.filter.Filter;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.aggregations.metrics.sum.Sum;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.FilterAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.aggregations.SumAggregate;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.SalesResult;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.TotalSalesQuery;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 class TotalSalesQueryAdapter extends QueryAdapter<TotalSalesQuery, TotalSalesQuery.Result> {
 
@@ -27,50 +26,49 @@ class TotalSalesQueryAdapter extends QueryAdapter<TotalSalesQuery, TotalSalesQue
 
     @Override
     SearchRequest buildQuery() {
-        SearchRequest searchRequest = new SearchRequest("policy_stats")
-                .types("policy_type");
-
-        BoolQueryBuilder filterBuilder = QueryBuilders.boolQuery();
-        if (query.getFilterByProductCode()!=null) {
-            filterBuilder.must(QueryBuilders.termQuery("productCode.keyword", query.getFilterByProductCode()));
+        List<Query> filters = new ArrayList<>();
+        if (query.getFilterByProductCode() != null) {
+            filters.add(Query.of(q -> q.term(t -> t.field("productCode.keyword").value(query.getFilterByProductCode()))));
         }
-        if (query.getFilterBySalesDate()!=null){
-            RangeQueryBuilder datesRange = QueryBuilders
-                    .rangeQuery("from")
-                    .gte(query.getFilterBySalesDate().getFrom().toString())
-                    .lt(query.getFilterBySalesDate().getTo().toString());
-            filterBuilder.must(datesRange);
+        if (query.getFilterBySalesDate() != null) {
+            filters.add(Query.of(q -> q.range(r -> r.untyped(u -> u.field("from")
+                    .gte(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getFrom().toString()))
+                    .lt(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getTo().toString()))))));
         }
-        AggregationBuilder aggBuilder = AggregationBuilders.filter("agg_filter",filterBuilder);
 
-        TermsAggregationBuilder sumAggBuilder = AggregationBuilders
-                .terms("count_by_product")
-                .field("productCode.keyword")
-                .subAggregation(AggregationBuilders.sum("total_premium").field("totalPremium"));
-        aggBuilder.subAggregation(sumAggBuilder);
+        BoolQuery boolQuery = BoolQuery.of(b -> b.must(filters));
 
-        SearchSourceBuilder srcBuilder = new SearchSourceBuilder()
-                .aggregation(aggBuilder)
-                .size(0);
-        searchRequest.source(srcBuilder);
-
-        return searchRequest;
+        return SearchRequest.of(s -> s
+                .index("policy_stats")
+                .size(0)
+                .aggregations("agg_filter", a -> a
+                        .filter(f -> f.bool(boolQuery))
+                        .aggregations("count_by_product", sa -> sa
+                                .terms(t -> t.field("productCode.keyword"))
+                                .aggregations("total_premium", sp -> sp
+                                        .sum(su -> su.field("totalPremium"))
+                                )
+                        )
+                )
+        );
     }
 
     @Override
-    TotalSalesQuery.Result extractResult(SearchResponse searchResponse) {
+    TotalSalesQuery.Result extractResult(SearchResponse<Void> searchResponse) {
         TotalSalesQuery.Result.ResultBuilder result = TotalSalesQuery.Result.builder();
         long count = 0;
         BigDecimal amount = BigDecimal.ZERO;
-        Filter filterAgg = searchResponse.getAggregations().get("agg_filter");
-        Terms products = filterAgg.getAggregations().get("count_by_product");
-        for (Terms.Bucket b : products.getBuckets()){
-            count += b.getDocCount();
-            Sum sum = b.getAggregations().get("total_premium");
-            amount = amount.add(BigDecimal.valueOf(sum.getValue()).setScale(2, RoundingMode.HALF_UP));
-            result.productTotal(b.getKeyAsString(), SalesResult.of(b.getDocCount(),BigDecimal.valueOf(sum.getValue())));
+
+        FilterAggregate filterAgg = searchResponse.aggregations().get("agg_filter").filter();
+        StringTermsAggregate products = filterAgg.aggregations().get("count_by_product").sterms();
+
+        for (StringTermsBucket b : products.buckets().array()) {
+            count += b.docCount();
+            SumAggregate sum = b.aggregations().get("total_premium").sum();
+            amount = amount.add(BigDecimal.valueOf(sum.value()).setScale(2, RoundingMode.HALF_UP));
+            result.productTotal(b.key().stringValue(), SalesResult.of(b.docCount(), BigDecimal.valueOf(sum.value())));
         }
-        result.total(SalesResult.of(count,amount));
+        result.total(SalesResult.of(count, amount));
 
         return result.build();
     }

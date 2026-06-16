@@ -4,13 +4,12 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.ProductGatewayClient;
 import pl.altkom.asc.lab.micronaut.poc.product.service.api.v1.ProductDto;
 
-import javax.inject.Inject;
-import java.util.List;
+import jakarta.inject.Inject;
 
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/api/products")
@@ -20,12 +19,12 @@ public class ProductGatewayController {
     private ProductGatewayClient client;
 
     @Get
-    public Single<List<ProductDto>> getAll() {
+    public Flux<ProductDto> getAll() {
         return client.getAll();
     }
 
     @Get("/{productCode}")
-    public Maybe<ProductDto> get(String productCode) {
+    public Mono<ProductDto> get(String productCode) {
         return client.get(productCode);
     }
 }

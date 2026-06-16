@@ -9,7 +9,7 @@ import pl.altkom.asc.lab.micronaut.poc.policy.shared.exceptions.BusinessExceptio
 
 import java.util.Optional;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import io.micronaut.transaction.annotation.ReadOnly;
 import lombok.RequiredArgsConstructor;

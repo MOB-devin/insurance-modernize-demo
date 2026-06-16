@@ -1,21 +1,19 @@
 package pl.altkom.asc.lab.micronaut.poc.dashboard.infrastructure.adapters.elastic;
 
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.filter.Filter;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.aggregations.metrics.sum.Sum;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import co.elastic.clients.elasticsearch._types.aggregations.FilterAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.aggregations.SumAggregate;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.AgentSalesQuery;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.SalesResult;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AgentSalesQueryAdapter extends QueryAdapter<AgentSalesQuery, AgentSalesQuery.Result> {
     public AgentSalesQueryAdapter(AgentSalesQuery query) {
@@ -24,50 +22,47 @@ public class AgentSalesQueryAdapter extends QueryAdapter<AgentSalesQuery, AgentS
 
     @Override
     SearchRequest buildQuery() {
-        SearchRequest searchRequest = new SearchRequest("policy_stats")
-                .types("policy_type");
-
-        BoolQueryBuilder filterBuilder = QueryBuilders.boolQuery();
+        List<Query> filters = new ArrayList<>();
         if (query.getFilterByAgentLogin() != null) {
-            filterBuilder.must(QueryBuilders.termQuery("agentLogin.keyword", query.getFilterByAgentLogin()));
+            filters.add(Query.of(q -> q.term(t -> t.field("agentLogin.keyword").value(query.getFilterByAgentLogin()))));
         }
         if (query.getFilterByProductCode() != null) {
-            filterBuilder.must(QueryBuilders.termQuery("productCode.keyword", query.getFilterByProductCode()));
+            filters.add(Query.of(q -> q.term(t -> t.field("productCode.keyword").value(query.getFilterByProductCode()))));
         }
         if (query.getFilterBySalesDate() != null) {
-            RangeQueryBuilder datesRange = QueryBuilders
-                    .rangeQuery("from")
-                    .gte(query.getFilterBySalesDate().getFrom().toString())
-                    .lt(query.getFilterBySalesDate().getTo().toString());
-            filterBuilder.must(datesRange);
+            filters.add(Query.of(q -> q.range(r -> r.untyped(u -> u.field("from")
+                    .gte(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getFrom().toString()))
+                    .lt(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getTo().toString()))))));
         }
-        AggregationBuilder aggBuilder = AggregationBuilders.filter("agg_filter", filterBuilder);
 
-        TermsAggregationBuilder sumAggBuilder = AggregationBuilders
-                .terms("count_by_agent")
-                .field("agentLogin.keyword")
-                .subAggregation(AggregationBuilders.sum("total_premium").field("totalPremium"));
-        aggBuilder.subAggregation(sumAggBuilder);
+        BoolQuery boolQuery = BoolQuery.of(b -> b.must(filters));
 
-        SearchSourceBuilder srcBuilder = new SearchSourceBuilder()
-                .aggregation(aggBuilder)
-                .size(0);
-        searchRequest.source(srcBuilder);
-
-        return searchRequest;
+        return SearchRequest.of(s -> s
+                .index("policy_stats")
+                .size(0)
+                .aggregations("agg_filter", a -> a
+                        .filter(f -> f.bool(boolQuery))
+                        .aggregations("count_by_agent", sa -> sa
+                                .terms(t -> t.field("agentLogin.keyword"))
+                                .aggregations("total_premium", sp -> sp
+                                        .sum(su -> su.field("totalPremium"))
+                                )
+                        )
+                )
+        );
     }
 
     @Override
-    AgentSalesQuery.Result extractResult(SearchResponse searchResponse) {
+    AgentSalesQuery.Result extractResult(SearchResponse<Void> searchResponse) {
         AgentSalesQuery.Result.ResultBuilder result = AgentSalesQuery.Result.builder();
-        Filter filterAgg = searchResponse.getAggregations().get("agg_filter");
-        Terms agents = filterAgg.getAggregations().get("count_by_agent");
+        FilterAggregate filterAgg = searchResponse.aggregations().get("agg_filter").filter();
+        StringTermsAggregate agents = filterAgg.aggregations().get("count_by_agent").sterms();
 
-        for (Terms.Bucket b : agents.getBuckets()) {
-            Sum sum = b.getAggregations().get("total_premium");
+        for (StringTermsBucket b : agents.buckets().array()) {
+            SumAggregate sum = b.aggregations().get("total_premium").sum();
             result.agentTotal(
-                    b.getKeyAsString(),
-                    SalesResult.of(b.getDocCount(), BigDecimal.valueOf(sum.getValue()))
+                    b.key().stringValue(),
+                    SalesResult.of(b.docCount(), BigDecimal.valueOf(sum.value()))
             );
         }
 

@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @Getter
 @AllArgsConstructor

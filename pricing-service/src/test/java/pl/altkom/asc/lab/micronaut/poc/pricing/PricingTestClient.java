@@ -6,7 +6,7 @@ import io.micronaut.http.client.annotation.Client;
 import pl.altkom.asc.lab.micronaut.poc.pricing.service.api.v1.commands.calculateprice.CalculatePriceCommand;
 import pl.altkom.asc.lab.micronaut.poc.pricing.service.api.v1.commands.calculateprice.CalculatePriceResult;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Client(id = "/pricing-service", path = "/pricing")
 public interface PricingTestClient {

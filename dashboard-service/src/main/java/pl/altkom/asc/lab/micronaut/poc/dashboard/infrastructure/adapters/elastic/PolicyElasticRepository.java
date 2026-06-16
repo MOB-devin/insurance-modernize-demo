@@ -1,25 +1,21 @@
 package pl.altkom.asc.lab.micronaut.poc.dashboard.infrastructure.adapters.elastic;
 
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.AgentSalesQuery;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.PolicyDocument;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.PolicyRepository;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.SalesTrendsQuery;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.TotalSalesQuery;
-import pl.altkom.asc.lab.micronaut.poc.dashboard.infrastructure.adapters.elastic.config.JsonConverter;
 
 import java.io.IOException;
+import java.util.List;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,17 +25,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PolicyElasticRepository implements PolicyRepository {
 
-    private final RestHighLevelClient esClient;
-    private final JsonConverter jsonConverter;
+    private final ElasticsearchClient esClient;
 
     public void save(PolicyDocument policyDocument) {
-        IndexRequest indexRequest = new IndexRequest("policy_stats")
-                .type("policy_type")
-                .id(policyDocument.getNumber())
-                .setRefreshPolicy("true")
-                .source(jsonConverter.stringifyObject(policyDocument), XContentType.JSON);
-
         try {
+            IndexRequest<PolicyDocument> indexRequest = IndexRequest.of(b -> b
+                    .index("policy_stats")
+                    .id(policyDocument.getNumber())
+                    .refresh(co.elastic.clients.elasticsearch._types.Refresh.True)
+                    .document(policyDocument)
+            );
             esClient.index(indexRequest);
         } catch (IOException e) {
             log.error("Error while saving policy", e);
@@ -48,49 +43,52 @@ public class PolicyElasticRepository implements PolicyRepository {
     }
 
     public PolicyDocument findByNumber(String number) {
-        SearchRequest searchRequest = new SearchRequest("policy_stats")
-                .types("policy_type");
+        try {
+            SearchRequest searchRequest = SearchRequest.of(s -> s
+                    .index("policy_stats")
+                    .size(10)
+                    .query(q -> q
+                            .bool(b -> b
+                                    .must(m -> m
+                                            .term(t -> t
+                                                    .field("number.keyword")
+                                                    .value(number)
+                                            )
+                                    )
+                            )
+                    )
+            );
 
-        BoolQueryBuilder filterBuilder = QueryBuilders.boolQuery();
+            SearchResponse<PolicyDocument> response = esClient.search(searchRequest, PolicyDocument.class);
+            List<Hit<PolicyDocument>> hits = response.hits().hits();
 
-        filterBuilder.must(QueryBuilders.termQuery("number.keyword", number));
-
-        SearchSourceBuilder srcBuilder = new SearchSourceBuilder()
-                .query(filterBuilder)
-                .size(10);
-
-        searchRequest.source(srcBuilder);
-
-        SearchResponse searchResponse = executeSearch(searchRequest);
-
-        SearchHit[] hits = searchResponse.getHits().getHits();
-
-        return hits.length > 0
-                ? jsonConverter.objectFromString(hits[0].getSourceAsString(), PolicyDocument.class)
-                : null;
+            return !hits.isEmpty() ? hits.get(0).source() : null;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to execute search", e);
+        }
     }
 
     public TotalSalesQuery.Result getTotalSales(TotalSalesQuery query) {
         TotalSalesQueryAdapter queryAdapter = QueryAdapter.of(query);
-        SearchResponse searchResponse = executeSearch(queryAdapter.buildQuery());
+        SearchResponse<Void> searchResponse = executeSearch(queryAdapter.buildQuery());
         return queryAdapter.extractResult(searchResponse);
     }
 
     public SalesTrendsQuery.Result getSalesTrends(SalesTrendsQuery query) {
         SalesTrendsQueryAdapter queryAdapter = QueryAdapter.of(query);
-        SearchResponse searchResponse = executeSearch(queryAdapter.buildQuery());
+        SearchResponse<Void> searchResponse = executeSearch(queryAdapter.buildQuery());
         return queryAdapter.extractResult(searchResponse);
     }
 
     public AgentSalesQuery.Result getAgentSales(AgentSalesQuery query) {
         AgentSalesQueryAdapter queryAdapter = QueryAdapter.of(query);
-        SearchResponse searchResponse = executeSearch(queryAdapter.buildQuery());
+        SearchResponse<Void> searchResponse = executeSearch(queryAdapter.buildQuery());
         return queryAdapter.extractResult(searchResponse);
     }
 
-    private SearchResponse executeSearch(SearchRequest request) {
+    private SearchResponse<Void> executeSearch(SearchRequest request) {
         try {
-            return esClient.search(request);
+            return esClient.search(request, Void.class);
         } catch (IOException e) {
             throw new RuntimeException("Failed to execute search", e);
         }

@@ -1,16 +1,16 @@
 package pl.altkom.asc.lab.micronaut.poc.product.service.api.v1;
 
 import io.micronaut.http.annotation.Get;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface ProductOperations {
 
     @Get
-    Single<List<ProductDto>> getAll();
+    Flux<ProductDto> getAll();
 
     @Get("/{productCode}")
-    Maybe<ProductDto> get(String productCode);
+    Mono<ProductDto> get(String productCode);
 }

@@ -20,7 +20,7 @@
             }
         },
         created() {
-            this.chatbotUrl = process.env.VUE_APP_BOT_URL;
+            this.chatbotUrl = import.meta.env.VUE_APP_BOT_URL;
         }
     }
 </script>

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import SalesPie from "./SalesPie.js";
+import SalesPie from "./SalesPie.vue";
 
 export default {
     name: 'SalesDistribution',

@@ -7,12 +7,15 @@ import lombok.NoArgsConstructor;
 import pl.altkom.asc.lab.micronaut.poc.policy.domain.vo.DateRange;
 import pl.altkom.asc.lab.micronaut.poc.policy.shared.exceptions.BusinessException;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @Getter
 @AllArgsConstructor

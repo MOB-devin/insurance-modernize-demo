@@ -8,38 +8,32 @@
     <version>1.0</version>
 
     <parent>
-        <groupId>io.micronaut</groupId>
+        <groupId>io.micronaut.platform</groupId>
         <artifactId>micronaut-parent</artifactId>
-        <version>2.3.0</version>
+        <version>4.7.6</version>
     </parent>
 
     <properties>
-        <jdk.version>14</jdk.version>
+        <jdk.version>21</jdk.version>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <maven.compiler.release>${jdk.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <micronaut.version>2.3.0</micronaut.version>
+        <micronaut.version>4.7.6</micronaut.version>
         <exec.mainClass>pl.altkom.asc.lab.micronaut.poc.chat.service.ChatApplication</exec.mainClass>
-        <micronaut.data.version>2.3.1</micronaut.data.version>
+        <micronaut.data.version>4.9.0</micronaut.data.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>jcenter.bintray.com</id>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <!-- LOMBOK -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>1.18.34</version>
             <scope>provided</scope>
         </dependency>
         <!-- LOMBOK -->
@@ -69,7 +63,7 @@
 
         <!-- DISCOVERY CLIENT -->
         <dependency>
-            <groupId>io.micronaut</groupId>
+            <groupId>io.micronaut.discovery</groupId>
             <artifactId>micronaut-discovery-client</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -94,7 +88,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.5.12</version>
             <scope>runtime</scope>
         </dependency>
         <!-- LOGS -->
@@ -163,7 +157,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.16</version>
+                            <version>1.18.34</version>
                         </path>
                         <path>
                             <groupId>io.micronaut</groupId>
@@ -171,9 +165,9 @@
                             <version>${micronaut.version}</version>
                         </path>
                         <path>
-                            <groupId>io.micronaut</groupId>
-                            <artifactId>micronaut-validation</artifactId>
-                            <version>${micronaut.version}</version>
+                            <groupId>io.micronaut.validation</groupId>
+                            <artifactId>micronaut-validation-processor</artifactId>
+                            <version>4.12.0</version>
                         </path>
                         <path>
                             <groupId>io.micronaut.data</groupId>
@@ -193,7 +187,7 @@
                                 <path>
                                     <groupId>org.projectlombok</groupId>
                                     <artifactId>lombok</artifactId>
-                                    <version>1.18.16</version>
+                                    <version>1.18.34</version>
                                 </path>
                                 <path>
                                     <groupId>io.micronaut</groupId>
@@ -201,9 +195,9 @@
                                     <version>${micronaut.version}</version>
                                 </path>
                                 <path>
-                                    <groupId>io.micronaut</groupId>
-                                    <artifactId>micronaut-validation</artifactId>
-                                    <version>${micronaut.version}</version>
+                                    <groupId>io.micronaut.validation</groupId>
+                                    <artifactId>micronaut-validation-processor</artifactId>
+                                    <version>4.12.0</version>
                                 </path>
                                 <path>
                                     <groupId>io.micronaut.data</groupId>

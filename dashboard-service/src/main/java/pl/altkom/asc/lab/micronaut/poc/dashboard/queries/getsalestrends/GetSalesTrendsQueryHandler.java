@@ -9,7 +9,7 @@ import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.TimeAggregationUnit;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.service.api.v1.queries.getsalestrendsquery.GetSalesTrendsQuery;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.service.api.v1.queries.getsalestrendsquery.GetSalesTrendsQueryResult;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @RequiredArgsConstructor

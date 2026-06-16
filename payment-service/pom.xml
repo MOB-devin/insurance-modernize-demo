@@ -8,37 +8,31 @@
     <version>1.0</version>
 
     <parent>
-        <groupId>io.micronaut</groupId>
+        <groupId>io.micronaut.platform</groupId>
         <artifactId>micronaut-parent</artifactId>
-        <version>2.4.0</version>
+        <version>4.7.6</version>
     </parent>
 
     <properties>
-        <jdk.version>14</jdk.version>
+        <jdk.version>21</jdk.version>
         <maven.compiler.target>${jdk.version}</maven.compiler.target>
         <maven.compiler.source>${jdk.version}</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <micronaut.version>2.4.0</micronaut.version>
+        <micronaut.version>4.7.6</micronaut.version>
         <exec.mainClass>pl.altkom.asc.lab.micronaut.poc.payment.PaymentApplication</exec.mainClass>
-        <micronaut.data.version>2.3.1</micronaut.data.version>
+        <micronaut.data.version>4.9.0</micronaut.data.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>jcenter.bintray.com</id>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <!-- LOMBOK -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>1.18.34</version>
             <scope>provided</scope>
         </dependency>
         <!-- LOMBOK -->
@@ -73,13 +67,13 @@
         </dependency>
 
         <dependency>
-            <groupId>io.micronaut.netflix</groupId>
-            <artifactId>micronaut-netflix-hystrix</artifactId>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-retry</artifactId>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>io.micronaut</groupId>
+            <groupId>io.micronaut.discovery</groupId>
             <artifactId>micronaut-discovery-client</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -88,7 +82,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.197</version>
+            <version>2.3.232</version>
         </dependency>
         <dependency>
             <groupId>io.micronaut.sql</groupId>
@@ -104,37 +98,27 @@
 
         <!-- TRACING WITH ZIPKIN -->
         <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-tracing</artifactId>
+            <groupId>io.micronaut.tracing</groupId>
+            <artifactId>micronaut-tracing-brave-http</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.zipkin.brave</groupId>
-            <artifactId>brave-instrumentation-http</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.zipkin.reporter2</groupId>
             <artifactId>zipkin-reporter</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>io.opentracing.brave</groupId>
-            <artifactId>brave-opentracing</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <!-- TRACING WITH ZIPKIN -->
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.5.12</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.5</version>
+            <version>1.11.0</version>
         </dependency>
 
         <!-- TESTS -->
@@ -156,7 +140,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>29.0-android</version>
+            <version>33.3.1-jre</version>
             <scope>test</scope>
         </dependency>
         <!-- TESTS -->
@@ -221,7 +205,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>1.18.16</version>
+                            <version>1.18.34</version>
                         </path>
                         <path>
                             <groupId>io.micronaut</groupId>
@@ -229,14 +213,24 @@
                             <version>${micronaut.version}</version>
                         </path>
                         <path>
-                            <groupId>io.micronaut</groupId>
-                            <artifactId>micronaut-validation</artifactId>
-                            <version>${micronaut.version}</version>
+                            <groupId>io.micronaut.validation</groupId>
+                            <artifactId>micronaut-validation-processor</artifactId>
+                            <version>4.12.0</version>
+                        </path>
+                        <path>
+                            <groupId>jakarta.persistence</groupId>
+                            <artifactId>jakarta.persistence-api</artifactId>
+                            <version>3.1.0</version>
                         </path>
                         <path>
                             <groupId>io.micronaut.data</groupId>
                             <artifactId>micronaut-data-processor</artifactId>
                             <version>${micronaut.data.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.micronaut.kafka</groupId>
+                            <artifactId>micronaut-kafka</artifactId>
+                            <version>5.7.1</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -251,7 +245,7 @@
                                 <path>
                                     <groupId>org.projectlombok</groupId>
                                     <artifactId>lombok</artifactId>
-                                    <version>1.18.16</version>
+                                    <version>1.18.34</version>
                                 </path>
                                 <path>
                                     <groupId>io.micronaut</groupId>
@@ -259,16 +253,26 @@
                                     <version>${micronaut.version}</version>
                                 </path>
                                 <path>
-                                    <groupId>io.micronaut</groupId>
-                                    <artifactId>micronaut-validation</artifactId>
-                                    <version>${micronaut.version}</version>
+                                    <groupId>io.micronaut.validation</groupId>
+                                    <artifactId>micronaut-validation-processor</artifactId>
+                                    <version>4.12.0</version>
                                 </path>
+                        <path>
+                            <groupId>jakarta.persistence</groupId>
+                            <artifactId>jakarta.persistence-api</artifactId>
+                            <version>3.1.0</version>
+                        </path>
                                 <path>
                                     <groupId>io.micronaut.data</groupId>
                                     <artifactId>micronaut-data-processor</artifactId>
                                     <version>${micronaut.data.version}</version>
                                 </path>
-                            </annotationProcessorPaths>
+                                <path>
+                            <groupId>io.micronaut.kafka</groupId>
+                            <artifactId>micronaut-kafka</artifactId>
+                            <version>5.7.1</version>
+                        </path>
+                    </annotationProcessorPaths>
                         </configuration>
                     </execution>
                 </executions>

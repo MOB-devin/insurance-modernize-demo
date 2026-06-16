@@ -1,78 +1,76 @@
 package pl.altkom.asc.lab.micronaut.poc.dashboard.infrastructure.adapters.elastic;
 
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.filter.Filter;
-import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
-import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
-import org.elasticsearch.search.aggregations.metrics.sum.Sum;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.joda.time.DateTime;
+import co.elastic.clients.elasticsearch._types.aggregations.DateHistogramBucket;
+import co.elastic.clients.elasticsearch._types.aggregations.FilterAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.SumAggregate;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.SalesResult;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.SalesTrendsQuery;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SalesTrendsQueryAdapter extends QueryAdapter<SalesTrendsQuery,SalesTrendsQuery.Result> {
+public class SalesTrendsQueryAdapter extends QueryAdapter<SalesTrendsQuery, SalesTrendsQuery.Result> {
     public SalesTrendsQueryAdapter(SalesTrendsQuery query) {
         super(query);
     }
 
     @Override
     SearchRequest buildQuery() {
-        SearchRequest searchRequest = new SearchRequest("policy_stats")
-                .types("policy_type");
-
-        BoolQueryBuilder filterBuilder = QueryBuilders.boolQuery();
-        if (query.getFilterByProductCode()!=null) {
-            filterBuilder.must(QueryBuilders.termQuery("productCode.keyword", query.getFilterByProductCode()));
+        List<Query> filters = new ArrayList<>();
+        if (query.getFilterByProductCode() != null) {
+            filters.add(Query.of(q -> q.term(t -> t.field("productCode.keyword").value(query.getFilterByProductCode()))));
         }
-        if (query.getFilterBySalesDate()!=null){
-            RangeQueryBuilder datesRange = QueryBuilders
-                    .rangeQuery("from")
-                    .gte(query.getFilterBySalesDate().getFrom().toString())
-                    .lt(query.getFilterBySalesDate().getTo().toString());
-            filterBuilder.must(datesRange);
+        if (query.getFilterBySalesDate() != null) {
+            filters.add(Query.of(q -> q.range(r -> r.untyped(u -> u.field("from")
+                    .gte(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getFrom().toString()))
+                    .lt(co.elastic.clients.json.JsonData.of(query.getFilterBySalesDate().getTo().toString()))))));
         }
-        AggregationBuilder aggBuilder = AggregationBuilders.filter("agg_filter",filterBuilder);
 
-        DateHistogramAggregationBuilder histBuilder = AggregationBuilders
-                .dateHistogram("sales")
-                .field("from")
-                .dateHistogramInterval(query.getAggregationUnit().toDateHistogramInterval())
-                .subAggregation(AggregationBuilders.sum("total_premium").field("totalPremium"));
-        aggBuilder.subAggregation(histBuilder);
+        BoolQuery boolQuery = BoolQuery.of(b -> b.must(filters));
 
-        SearchSourceBuilder srcBuilder = new SearchSourceBuilder()
-                .aggregation(aggBuilder)
-                .size(0);
-        searchRequest.source(srcBuilder);
-
-        return searchRequest;
+        return SearchRequest.of(s -> s
+                .index("policy_stats")
+                .size(0)
+                .aggregations("agg_filter", a -> a
+                        .filter(f -> f.bool(boolQuery))
+                        .aggregations("sales", sa -> sa
+                                .dateHistogram(dh -> dh
+                                        .field("from")
+                                        .calendarInterval(query.getAggregationUnit().toCalendarInterval())
+                                )
+                                .aggregations("total_premium", sp -> sp
+                                        .sum(su -> su.field("totalPremium"))
+                                )
+                        )
+                )
+        );
     }
 
     @Override
-    SalesTrendsQuery.Result extractResult(SearchResponse searchResponse) {
+    SalesTrendsQuery.Result extractResult(SearchResponse<Void> searchResponse) {
         SalesTrendsQuery.Result.ResultBuilder result = SalesTrendsQuery.Result.builder();
 
-        Filter filterAgg = searchResponse.getAggregations().get("agg_filter");
-        Histogram agg = filterAgg.getAggregations().get("sales");
-        for (Histogram.Bucket b : agg.getBuckets()){
-            DateTime key = (DateTime)b.getKey();
-            Sum sum = b.getAggregations().get("total_premium");
+        FilterAggregate filterAgg = searchResponse.aggregations().get("agg_filter").filter();
+        List<DateHistogramBucket> buckets = filterAgg.aggregations().get("sales").dateHistogram().buckets().array();
+
+        for (DateHistogramBucket b : buckets) {
+            SumAggregate sum = b.aggregations().get("total_premium").sum();
+            LocalDate key = Instant.ofEpochMilli(b.key()).atZone(ZoneOffset.UTC).toLocalDate();
             result.periodSale(
                     new SalesTrendsQuery.PeriodSales(
-                            LocalDate.of(key.getYear(),key.getMonthOfYear(),key.getDayOfMonth()),
-                            b.getKeyAsString(),
-                            SalesResult.of(b.getDocCount(), BigDecimal.valueOf(sum.getValue()).setScale(2, RoundingMode.HALF_UP))
+                            key,
+                            b.keyAsString(),
+                            SalesResult.of(b.docCount(), BigDecimal.valueOf(sum.value()).setScale(2, RoundingMode.HALF_UP))
                     )
             );
         }

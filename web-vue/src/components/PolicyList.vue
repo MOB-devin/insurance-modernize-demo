@@ -2,18 +2,31 @@
     <div>
         <div class="filter-container">
             <h4>Search policies</h4>
-            <b-form inline>
-                <b-input v-model="filterFields.number" placeholder="Policy number" class="mr-sm-2 mb-sm-0 search-input"/>
-                <b-input v-model="filterFields.policyHolder" placeholder="Policy Holder" class="mr-sm-2 mb-sm-0 search-input"/>
-                <b-button v-on:click="search()" variant="primary" class="search-button">Search</b-button>
-            </b-form>
+            <form class="d-flex">
+                <input v-model="filterFields.number" placeholder="Policy number" class="form-control me-2 search-input"/>
+                <input v-model="filterFields.policyHolder" placeholder="Policy Holder" class="form-control me-2 search-input"/>
+                <button type="button" class="btn btn-primary search-button" @click="search()">Search</button>
+            </form>
         </div>
 
-        <b-table bordered striped hover
-                 :items="policies"
-                 :fields="fields"
-                 @row-clicked="showDetails">
-        </b-table>
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Date From</th>
+                    <th>Date To</th>
+                    <th>Policy Holder</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="policy in policies" :key="policy.number" @click="showDetails(policy)" style="cursor: pointer;">
+                    <td>{{ policy.number }}</td>
+                    <td>{{ policy.dateFrom }}</td>
+                    <td>{{ policy.dateTo }}</td>
+                    <td>{{ policy.policyHolder }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -25,12 +38,6 @@
         name: "PolicyList",
         data() {
             return {
-                fields: [
-                    {key: 'number'},
-                    {key: 'dateFrom'},
-                    {key: 'dateTo'},
-                    {key: 'policyHolder'}
-                ],
                 policies: [],
                 filterFields: {
                     policyHolder: '',

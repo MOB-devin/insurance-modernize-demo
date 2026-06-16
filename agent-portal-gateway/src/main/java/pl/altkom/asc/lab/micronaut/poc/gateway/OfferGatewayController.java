@@ -8,7 +8,7 @@ import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.PolicyGatewayClient;
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.commands.createoffer.CreateOfferCommand;
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.commands.createoffer.CreateOfferResult;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/api/offers")

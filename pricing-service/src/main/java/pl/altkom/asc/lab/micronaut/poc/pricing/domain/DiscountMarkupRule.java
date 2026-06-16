@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.mvel2.MVEL;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+import io.micronaut.core.annotation.Introspected;
+
+@Introspected
 @Entity
 @DiscriminatorColumn(name = "type")
 @Table(name = "discount_markup_rule")

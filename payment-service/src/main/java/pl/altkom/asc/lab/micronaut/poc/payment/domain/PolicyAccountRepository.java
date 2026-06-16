@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface PolicyAccountRepository extends GenericRepository<PolicyAccount, Long> {
 
     @EntityGraph(attributePaths = {"entries"})
+    @Query("SELECT p FROM PolicyAccount p WHERE p.policyNumber = :policyNumber")
     Optional<PolicyAccount> findByPolicyNumber(String policyNumber);
 
     @EntityGraph(attributePaths = {"entries"})
@@ -21,5 +22,6 @@ public interface PolicyAccountRepository extends GenericRepository<PolicyAccount
 
     PolicyAccount save(PolicyAccount policyAccount);
 
+    @Query("SELECT p FROM PolicyAccount p")
     Collection<PolicyAccountDto> findAll();
 }

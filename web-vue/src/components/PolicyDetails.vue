@@ -21,7 +21,7 @@
                 <span><strong>Account number:</strong> {{ policy.accountNumber }}</span>
             </div>
             <div class="row">
-                <span><strong>Covers:</strong> {{ policy.covers | join }}</span>
+                <span><strong>Covers:</strong> {{ formatCovers(policy.covers) }}</span>
             </div>
             <div class="row">
                 <button type="submit"
@@ -52,15 +52,12 @@
                 this.policy = response.data.policy;
             })
         },
-        filters: {
-            join: function (value) {
+        methods: {
+            formatCovers(value) {
                 if (!value)
                     return '';
-
                 return value.join(', ');
-            }
-        },
-        methods: {
+            },
             documents: function () {
                 HTTP.get("documents/" + this.policyNumber).then(response => {
                     this.documentsList = response.data.documents;

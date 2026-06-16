@@ -8,7 +8,7 @@ import pl.altkom.asc.lab.micronaut.poc.dashboard.domain.TotalSalesQuery;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.service.api.v1.queries.gettotalsalesquery.GetTotalSalesQuery;
 import pl.altkom.asc.lab.micronaut.poc.dashboard.service.api.v1.queries.gettotalsalesquery.GetTotalSalesQueryResult;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 
 @Singleton

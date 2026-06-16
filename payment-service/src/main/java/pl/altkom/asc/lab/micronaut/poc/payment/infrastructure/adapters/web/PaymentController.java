@@ -9,7 +9,7 @@ import pl.altkom.asc.lab.micronaut.poc.payment.service.api.v1.operations.Payment
 import java.time.LocalDate;
 import java.util.Collection;
 
-import io.micronaut.configuration.hystrix.annotation.HystrixCommand;
+import io.micronaut.retry.annotation.Retryable;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
@@ -22,14 +22,14 @@ public class PaymentController implements PaymentOperations {
     private final PolicyAccountRepository policyAccountRepository;
 
     @Override
-    @HystrixCommand
+    @Retryable
     @ExecuteOn(TaskExecutors.IO)
     public Collection<PolicyAccountDto> accounts() {
         return policyAccountRepository.findAll();
     }
 
     @Override
-    @HystrixCommand
+    @Retryable
     @ExecuteOn(TaskExecutors.IO)
     public PolicyAccountBalanceDto accountBalance(String accountNumber) {
         return policyAccountRepository.findByPolicyAccountNumber(accountNumber)

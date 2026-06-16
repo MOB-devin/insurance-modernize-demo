@@ -11,7 +11,7 @@ import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.events.PolicyTermin
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.events.dto.PolicyDto;
 import pl.altkom.asc.lab.micronaut.poc.policy.shared.exceptions.BusinessException;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.time.LocalDate;
 import java.util.Optional;
 

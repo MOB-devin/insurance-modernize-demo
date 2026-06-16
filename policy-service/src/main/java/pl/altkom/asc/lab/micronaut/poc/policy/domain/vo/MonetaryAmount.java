@@ -3,7 +3,7 @@ package pl.altkom.asc.lab.micronaut.poc.policy.domain.vo;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 import lombok.Getter;
 

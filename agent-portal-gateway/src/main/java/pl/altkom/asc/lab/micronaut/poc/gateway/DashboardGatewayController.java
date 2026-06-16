@@ -14,7 +14,7 @@ import pl.altkom.asc.lab.micronaut.poc.dashboard.service.api.v1.queries.gettotal
 import pl.altkom.asc.lab.micronaut.poc.dashboard.service.api.v1.queries.gettotalsalesquery.GetTotalSalesQueryResult;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.DashboardGatewayClient;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/api/dashboard")

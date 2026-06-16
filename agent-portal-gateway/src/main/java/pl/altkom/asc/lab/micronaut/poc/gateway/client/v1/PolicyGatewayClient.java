@@ -14,7 +14,7 @@ import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.commands.terminatep
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.commands.terminatepolicy.TerminatePolicyResult;
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.queries.getpolicydetails.GetPolicyDetailsQueryResult;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Client(id = "policy-service")
 @Retryable(attempts = "2", delay = "2s")
