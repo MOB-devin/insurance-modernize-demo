@@ -48,8 +48,9 @@ public class CustomClaimsTest {
         //when:
         String accessToken = rsp.body().getAccessToken();
         JwtTokenValidator tokenValidator = server.getApplicationContext().getBean(JwtTokenValidator.class);
-        Authentication authentication = Mono
-                .from(tokenValidator.validateToken(accessToken,request))
+        @SuppressWarnings("unchecked")
+        Authentication authentication = (Authentication) Mono
+                .from(tokenValidator.validateToken(accessToken, request))
                 .block();
 
         //then:
