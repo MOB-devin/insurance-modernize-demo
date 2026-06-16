@@ -17,22 +17,22 @@ public class DataLoader implements ApplicationEventListener<ServerStartupEvent> 
 
     @Override
     public void onApplicationEvent(ServerStartupEvent serverStartupEvent) {
-        List<Product> allProducts = productsRepository.findAll().blockingGet();
+        List<Product> allProducts = productsRepository.findAll().block();
 
         if (allProducts.stream().noneMatch(p -> p.getCode().equals("CAR"))) {
-            productsRepository.add(DemoProductsFactory.car()).blockingGet();
+            productsRepository.add(DemoProductsFactory.car()).block();
         }
 
         if (allProducts.stream().noneMatch(p -> p.getCode().equals("FAI"))) {
-            productsRepository.add(DemoProductsFactory.farm()).blockingGet();
+            productsRepository.add(DemoProductsFactory.farm()).block();
         }
 
         if (allProducts.stream().noneMatch(p -> p.getCode().equals("HSI"))) {
-            productsRepository.add(DemoProductsFactory.house()).blockingGet();
+            productsRepository.add(DemoProductsFactory.house()).block();
         }
 
         if (allProducts.stream().noneMatch(p -> p.getCode().equals("TRI"))) {
-            productsRepository.add(DemoProductsFactory.travel()).blockingGet();
+            productsRepository.add(DemoProductsFactory.travel()).block();
         }
     }
 }

@@ -30,7 +30,7 @@ public class ProductsRepository implements Products {
     public Mono<List<Product>> findAll() {
         return Flux.from(
                 getCollection().find()
-        ).toList();
+        ).collectList();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ProductsRepository implements Products {
                 getCollection()
                         .find(Filters.eq("code", productCode))
                         .limit(1)
-        ).firstElement();
+        ).next();
     }
 
     private MongoCollection<Product> getCollection() {

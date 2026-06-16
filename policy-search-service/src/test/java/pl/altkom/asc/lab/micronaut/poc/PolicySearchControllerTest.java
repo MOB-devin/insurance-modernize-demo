@@ -23,7 +23,7 @@ public class PolicySearchControllerTest {
 
     @Test
     public void testPolicies() {
-        FindPolicyQueryResult policies = client.policies("1234").blockingGet();
+        FindPolicyQueryResult policies = client.policies("1234");
 
         Assertions.assertNotNull(policies);
         Assertions.assertNotNull(policies.getPolicies());
