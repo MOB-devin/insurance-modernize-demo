@@ -7,7 +7,6 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
-import reactor.core.publisher.Mono;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.PolicyGatewayClient;
 import pl.altkom.asc.lab.micronaut.poc.gateway.client.v1.PolicySearchGatewayClient;
 import pl.altkom.asc.lab.micronaut.poc.policy.search.service.api.v1.queries.findpolicy.FindPolicyQueryResult;
@@ -30,7 +29,7 @@ public class PolicyGatewayController {
     private PolicySearchGatewayClient policySearchClient;
 
     @Get
-    Mono<FindPolicyQueryResult> policies(@QueryValue(value = "q", defaultValue = "*") String q) {
+    FindPolicyQueryResult policies(@QueryValue(value = "q", defaultValue = "*") String q) {
         return policySearchClient.policies(q);
     }
 
