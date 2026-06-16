@@ -15,8 +15,9 @@
 
     <properties>
         <micronaut.version>4.7.6</micronaut.version>
+        <micronaut.data.version>4.9.0</micronaut.data.version>
         <jdk.version>21</jdk.version>
-        <release.version>14</release.version>
+        <release.version>21</release.version>
     </properties>
 
 
@@ -73,9 +74,9 @@
                             <version>${micronaut.version}</version>
                         </path>
                         <path>
-                            <groupId>io.micronaut</groupId>
-                            <artifactId>micronaut-validation</artifactId>
-                            <version>${micronaut.version}</version>
+                            <groupId>io.micronaut.validation</groupId>
+                            <artifactId>micronaut-validation-processor</artifactId>
+                            <version>4.12.0</version>
                         </path>
                         <path>
                             <groupId>io.micronaut.data</groupId>
@@ -103,9 +104,9 @@
                                     <version>${micronaut.version}</version>
                                 </path>
                                 <path>
-                                    <groupId>io.micronaut</groupId>
-                                    <artifactId>micronaut-validation</artifactId>
-                                    <version>${micronaut.version}</version>
+                                    <groupId>io.micronaut.validation</groupId>
+                                    <artifactId>micronaut-validation-processor</artifactId>
+                                    <version>4.12.0</version>
                                 </path>
                                 <path>
                                     <groupId>io.micronaut.data</groupId>
