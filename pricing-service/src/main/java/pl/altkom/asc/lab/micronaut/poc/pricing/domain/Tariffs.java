@@ -12,4 +12,6 @@ public interface Tariffs extends GenericRepository<Tariff, Long>  {
 
     @Query("SELECT t FROM Tariff t WHERE t.code = :code")
     Tariff getByCode(String code);
+
+    Tariff save(Tariff tariff);
 }
