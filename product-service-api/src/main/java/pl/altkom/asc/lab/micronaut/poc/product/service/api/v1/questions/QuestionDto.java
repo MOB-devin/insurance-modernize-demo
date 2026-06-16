@@ -1,6 +1,5 @@
 package pl.altkom.asc.lab.micronaut.poc.product.service.api.v1.questions;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import io.micronaut.core.annotation.Introspected;
@@ -14,11 +13,6 @@ import lombok.NoArgsConstructor;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = ChoiceQuestionDto.class, name = "choice"),
-        @JsonSubTypes.Type(value = DateQuestionDto.class, name = "date"),
-        @JsonSubTypes.Type(value = NumericQuestionDto.class, name = "numeric")
-})
 public class QuestionDto {
     private String code;
     private int index;

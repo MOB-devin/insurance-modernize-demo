@@ -8,7 +8,7 @@ import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.http.client.RxHttpClient;
+import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.runtime.server.EmbeddedServer;
@@ -27,7 +27,7 @@ public class LoginTest {
 
     @Inject
     @Client("/")
-    private RxHttpClient httpClient;
+    private HttpClient httpClient;
 
     @Test
     public void canLoginWithValidCredentials() {

@@ -2,7 +2,7 @@ package pl.altkom.asc.lab.micronaut.poc.auth;
 
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.http.HttpHeaderValues;
-import io.micronaut.security.authentication.UserDetails;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.token.jwt.render.AccessRefreshToken;
 import io.micronaut.security.token.jwt.render.BearerAccessRefreshToken;
 import io.micronaut.security.token.jwt.render.BearerTokenRenderer;
@@ -13,22 +13,23 @@ public class CustomBearerTokenRenderer extends BearerTokenRenderer {
     private final String BEARER_TOKEN_TYPE = HttpHeaderValues.AUTHORIZATION_PREFIX_BEARER;
 
     @Override
-    public AccessRefreshToken render(UserDetails userDetails, Integer expiresIn, String accessToken, String refreshToken) {
-        if (userDetails instanceof InsuranceAgentDetails) {
+    public AccessRefreshToken render(Authentication authentication, Integer expiresIn, String accessToken, String refreshToken) {
+        Object avatar = authentication.getAttributes().get("avatar");
+        if (avatar != null) {
             return new CustomBearerAccessRefreshToken(
-                    userDetails.getUsername(),
-                    userDetails.getRoles(),
+                    authentication.getName(),
+                    authentication.getRoles(),
                     expiresIn,
                     accessToken,
                     refreshToken,
                     BEARER_TOKEN_TYPE,
-                    ((InsuranceAgentDetails) userDetails).getAvatarUrl()
+                    (String) avatar
             );
         }
 
         return new BearerAccessRefreshToken(
-                userDetails.getUsername(),
-                userDetails.getRoles(),
+                authentication.getName(),
+                authentication.getRoles(),
                 expiresIn,
                 accessToken,
                 refreshToken,

@@ -7,29 +7,27 @@ import java.util.Optional;
 import jakarta.inject.Singleton;
 
 import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationFailed;
 import io.micronaut.security.authentication.AuthenticationProvider;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import io.reactivex.Flowable;
+import reactor.core.publisher.Flux;
 import lombok.RequiredArgsConstructor;
 
 @Singleton
 @RequiredArgsConstructor
-public class AuthProvider implements AuthenticationProvider {
+public class AuthProvider<B> implements AuthenticationProvider<B> {
 
-    //private final InsuranceAgents insuranceAgents;
     private final InsuranceAgentsRepository insuranceAgents;
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<?> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
+    public Publisher<AuthenticationResponse> authenticate(HttpRequest<B> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
         Optional<InsuranceAgent> agent = insuranceAgents.findByLogin((String) authenticationRequest.getIdentity());
 
         if (agent.isPresent() && agent.get().passwordMatches((String) authenticationRequest.getSecret())) {
-            return Flowable.just(createUserDetails(agent.get()));
+            return Flux.just(createUserDetails(agent.get()));
         }
 
-        return Flowable.just(new AuthenticationFailed());
+        return Flux.just(AuthenticationResponse.failure());
     }
 
     private InsuranceAgentDetails createUserDetails(InsuranceAgent agent) {

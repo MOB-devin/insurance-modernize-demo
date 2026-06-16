@@ -3,9 +3,8 @@ package pl.altkom.asc.lab.micronaut.poc.product.service.infrastructure.adapters.
 import com.mongodb.client.model.Filters;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoCollection;
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import lombok.RequiredArgsConstructor;
 import pl.altkom.asc.lab.micronaut.poc.product.service.domain.Product;
 import pl.altkom.asc.lab.micronaut.poc.product.service.domain.Products;
@@ -21,22 +20,22 @@ public class ProductsRepository implements Products {
     private final MongoClient mongoClient;
 
     @Override
-    public Single<Product> add(Product product) {
-        return Single.fromPublisher(
+    public Mono<Product> add(Product product) {
+        return Mono.from(
                 getCollection().insertOne(product)
         ).map(success -> product);
     }
 
     @Override
-    public Single<List<Product>> findAll() {
-        return Flowable.fromPublisher(
+    public Mono<List<Product>> findAll() {
+        return Flux.from(
                 getCollection().find()
         ).toList();
     }
 
     @Override
-    public Maybe<Product> findOne(String productCode) {
-        return Flowable.fromPublisher(
+    public Mono<Product> findOne(String productCode) {
+        return Flux.from(
                 getCollection()
                         .find(Filters.eq("code", productCode))
                         .limit(1)

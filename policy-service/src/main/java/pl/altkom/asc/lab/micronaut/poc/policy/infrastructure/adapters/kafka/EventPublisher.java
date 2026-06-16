@@ -1,8 +1,8 @@
 package pl.altkom.asc.lab.micronaut.poc.policy.infrastructure.adapters.kafka;
 
-import io.micronaut.configuration.kafka.annotation.KafkaClient;
-import io.micronaut.configuration.kafka.annotation.KafkaKey;
-import io.micronaut.configuration.kafka.annotation.Topic;
+import io.micronaut.kafka.annotation.KafkaClient;
+import io.micronaut.kafka.annotation.KafkaKey;
+import io.micronaut.kafka.annotation.Topic;
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.events.PolicyRegisteredEvent;
 import pl.altkom.asc.lab.micronaut.poc.policy.service.api.v1.events.PolicyTerminatedEvent;
 
