@@ -1,36 +1,36 @@
 package pl.altkom.asc.lab.micronaut.poc.auth;
 
-import org.reactivestreams.Publisher;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import jakarta.inject.Singleton;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.security.authentication.AuthenticationProvider;
+import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.security.authentication.AuthenticationRequest;
 import io.micronaut.security.authentication.AuthenticationResponse;
-import reactor.core.publisher.Flux;
+import io.micronaut.security.authentication.provider.AuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 
 @Singleton
 @RequiredArgsConstructor
-public class AuthProvider<B> implements AuthenticationProvider<B> {
+public class AuthProvider<T> implements AuthenticationProvider<T, String, String> {
 
     private final InsuranceAgentsRepository insuranceAgents;
 
     @Override
-    public Publisher<AuthenticationResponse> authenticate(HttpRequest<B> httpRequest, AuthenticationRequest<?, ?> authenticationRequest) {
-        Optional<InsuranceAgent> agent = insuranceAgents.findByLogin((String) authenticationRequest.getIdentity());
+    @NonNull
+    public AuthenticationResponse authenticate(@Nullable T requestContext, @NonNull AuthenticationRequest<String, String> authenticationRequest) {
+        Optional<InsuranceAgent> agent = insuranceAgents.findByLogin(authenticationRequest.getIdentity());
 
-        if (agent.isPresent() && agent.get().passwordMatches((String) authenticationRequest.getSecret())) {
-            return Flux.just(createUserDetails(agent.get()));
+        if (agent.isPresent() && agent.get().passwordMatches(authenticationRequest.getSecret())) {
+            InsuranceAgent a = agent.get();
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("avatar", a.avatar());
+            return AuthenticationResponse.success(a.login(), a.availableProductCodes(), attributes);
         }
 
-        return Flux.just(AuthenticationResponse.failure());
-    }
-
-    private InsuranceAgentDetails createUserDetails(InsuranceAgent agent) {
-        return new InsuranceAgentDetails(agent.login(), agent.avatar(), agent.availableProductCodes());
+        return AuthenticationResponse.failure();
     }
 }
