@@ -246,6 +246,11 @@
                                     <artifactId>micronaut-validation-processor</artifactId>
                                     <version>4.12.0</version>
                                 </annotationProcessorPath>
+                                <annotationProcessorPath>
+                                    <groupId>io.micronaut.kafka</groupId>
+                                    <artifactId>micronaut-kafka</artifactId>
+                                    <version>5.7.1</version>
+                                </annotationProcessorPath>
                             </annotationProcessorPaths>
                         </configuration>
                     </execution>
@@ -279,6 +284,11 @@
                                     <groupId>io.micronaut.validation</groupId>
                                     <artifactId>micronaut-validation-processor</artifactId>
                                     <version>4.12.0</version>
+                                </annotationProcessorPath>
+                                <annotationProcessorPath>
+                                    <groupId>io.micronaut.kafka</groupId>
+                                    <artifactId>micronaut-kafka</artifactId>
+                                    <version>5.7.1</version>
                                 </annotationProcessorPath>
                             </annotationProcessorPaths>
                         </configuration>

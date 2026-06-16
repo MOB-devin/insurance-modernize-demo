@@ -222,6 +222,11 @@
                             <artifactId>micronaut-data-processor</artifactId>
                             <version>${micronaut.data.version}</version>
                         </path>
+                        <path>
+                            <groupId>io.micronaut.kafka</groupId>
+                            <artifactId>micronaut-kafka</artifactId>
+                            <version>5.7.1</version>
+                        </path>
                     </annotationProcessorPaths>
                 </configuration>
                 <executions>
@@ -252,7 +257,12 @@
                                     <artifactId>micronaut-data-processor</artifactId>
                                     <version>${micronaut.data.version}</version>
                                 </path>
-                            </annotationProcessorPaths>
+                                <path>
+                            <groupId>io.micronaut.kafka</groupId>
+                            <artifactId>micronaut-kafka</artifactId>
+                            <version>5.7.1</version>
+                        </path>
+                    </annotationProcessorPaths>
                         </configuration>
                     </execution>
                 </executions>
